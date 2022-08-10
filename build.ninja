@@ -1,0 +1,17 @@
+cflags = -std=c++17 -I./src/include/
+lflags = -lGL -lglfw -lGLEW
+cxx = clang++
+
+rule cc
+  command = $cxx -c $in -o $out $cflags
+rule lnk
+  command = $cxx $in -o $out $lflags 
+
+
+build obj/3d.o: cc src/main.cpp
+build obj/window.o: cc src/Window.cpp
+build obj/shader.o: cc src/Shader.cpp
+build obj/vbo.o: cc src/VBO.cpp
+build obj/vao.o: cc src/VAO.cpp
+
+build 3d: lnk obj/3d.o obj/window.o obj/shader.o obj/vbo.o obj/vao.o
