@@ -61,12 +61,7 @@ void Window::loop() {
     vbo.bind(vertices);
 
     vbo.unbind();
-    vao.unbind();
-
-    std::cout << glGetError() << std::endl;
-
-    std::cout << glGetError() << std::endl;
-    
+    vao.unbind();    
 
     while (!glfwWindowShouldClose(m_window)) {
 

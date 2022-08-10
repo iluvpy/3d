@@ -33,7 +33,6 @@ void Shader::init(const std::string& vertexShaderPath, const std::string& fragme
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    std::cout << glGetError() << std::endl;
 
 }
 
