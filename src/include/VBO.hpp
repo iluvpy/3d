@@ -6,8 +6,8 @@
 
 class VBO {
 public:
-    void init();
-    void bind(std::vector<Vertex> vertices);
+    void init(std::vector<Vertex> vertices);
+    void bind();
     void unbind();
     ~VBO();
 private:

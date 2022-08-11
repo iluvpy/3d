@@ -2,6 +2,7 @@
 #include "Vertex.hpp"
 #include "VAO.hpp"
 #include "VBO.hpp"
+#include "EBO.hpp"
 #include "Shader.hpp"
 #include "RenderSettings.hpp"
 
@@ -43,9 +44,14 @@ Window::~Window() {
 void Window::loop() {
 
     std::vector<Vertex> vertices = {
-        Vertex{-0.5f,  -0.5f, 0.0f},
-        Vertex{ 0.5f,  -0.5f, 0.0f},
-        Vertex{ 0.0f,   0.5f, 0.0f}
+        Vertex{ 0.5f,  0.5f, 0.0f},  // top right
+        Vertex{ 0.5f, -0.5f, 0.0f},  // bottom right
+        Vertex{-0.5f, -0.5f, 0.0f},  // bottom left
+        Vertex{-0.5f,  0.5f, 0.0f}   // top left 
+    };
+    unsigned int indices[] = {  // note that we start from 0!
+        0, 1, 3,   // first triangle
+        1, 2, 3    // second triangle
     };  
 
     Shader shader;
@@ -53,15 +59,22 @@ void Window::loop() {
 
     VAO vao;
     vao.init();
+    vao.bind();
 
     VBO vbo;
-    vbo.init();
+    vbo.init(vertices);
 
-    vao.bind();
-    vbo.bind(vertices);
+    EBO ebo;
+    ebo.init();
+
+    ebo.bind(indices);
+    vbo.bind();
 
     vbo.unbind();
-    vao.unbind();    
+    vao.unbind();
+
+
+    std::cout << "errors: " << glGetError() << std::endl;
 
     while (!glfwWindowShouldClose(m_window)) {
 
@@ -72,7 +85,8 @@ void Window::loop() {
 
         shader.bind();
         vao.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 
         glfwPollEvents();
 

@@ -13,5 +13,6 @@ build obj/window.o: cc src/Window.cpp
 build obj/shader.o: cc src/Shader.cpp
 build obj/vbo.o: cc src/VBO.cpp
 build obj/vao.o: cc src/VAO.cpp
+build obj/ebo.o: cc src/EBO.cpp
 
-build 3d: lnk obj/3d.o obj/window.o obj/shader.o obj/vbo.o obj/vao.o
+build 3d: lnk obj/3d.o obj/window.o obj/shader.o obj/vbo.o obj/vao.o obj/ebo.o
