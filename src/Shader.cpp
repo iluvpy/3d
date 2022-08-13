@@ -44,6 +44,16 @@ void Shader::unbind() {
     glUseProgram(0);
 }
 
+GLint Shader::getUniformLocation(const std::string& name) {
+    auto it = m_uLocations.find(name);
+    if (it != m_uLocations.end()) {
+        return it->second;
+    }
+    GLint location = glGetUniformLocation(m_program, name.c_str());
+    m_uLocations.insert(std::make_pair(name, location));
+    return location;
+}
+
 std::string Shader::readShader(const std::string &path) {
     // Read from the text file
     std::ifstream shaderFile(path);
