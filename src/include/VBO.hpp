@@ -6,9 +6,10 @@
 
 class VBO {
 public:
-    void init(std::vector<Vertex> vertices);
-    void bind();
+    void init();
+    void bind(std::vector<Vertex> vertices);
     void unbind();
+    void attrib();
     ~VBO();
 private:
     GLuint m_vertexBuffer;

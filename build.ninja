@@ -1,4 +1,4 @@
-cflags = -std=c++17 -I./src/include/
+cflags = -std=c++17 -I./src/include/ -g
 lflags = -lGL -lglfw -lGLEW
 cxx = clang++
 

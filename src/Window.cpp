@@ -49,7 +49,7 @@ void Window::loop() {
         Vertex{-0.5f, -0.5f, 0.0f},  // bottom left
         Vertex{-0.5f,  0.5f, 0.0f}   // top left 
     };
-    unsigned int indices[] = {  // note that we start from 0!
+    std::vector<unsigned int> indices = {  // note that we start from 0!
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
     };  
@@ -59,26 +59,28 @@ void Window::loop() {
 
     VAO vao;
     vao.init();
-    vao.bind();
 
     VBO vbo;
-    vbo.init(vertices);
+    vbo.init();
 
     EBO ebo;
     ebo.init();
 
+
+
+    vao.bind();
+
+    vbo.bind(vertices);
     ebo.bind(indices);
-    vbo.bind();
+    vbo.attrib();
 
     vbo.unbind();
     vao.unbind();
 
 
-    std::cout << "errors: " << glGetError() << std::endl;
 
     while (!glfwWindowShouldClose(m_window)) {
 
-        glfwSwapBuffers(m_window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -87,7 +89,7 @@ void Window::loop() {
         vao.bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-
+        glfwSwapBuffers(m_window);
         glfwPollEvents();
 
     }
