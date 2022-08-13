@@ -44,15 +44,11 @@ Window::~Window() {
 void Window::loop() {
 
     std::vector<Vertex> vertices = {
-        Vertex{ 0.5f,  0.5f, 0.0f},  // top right
-        Vertex{ 0.5f, -0.5f, 0.0f},  // bottom right
-        Vertex{-0.5f, -0.5f, 0.0f},  // bottom left
-        Vertex{-0.5f,  0.5f, 0.0f}   // top left 
+        Vertex{  0.0f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f},  // top right
+        Vertex{  0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f},  // bottom right
+        Vertex{ -0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 0.0f}
     };
-    std::vector<unsigned int> indices = {  // note that we start from 0!
-        0, 1, 3,   // first triangle
-        1, 2, 3    // second triangle
-    };  
+
 
     Shader shader;
     shader.init(RenderSettings::VERTEX_SHADER_PATH, RenderSettings::FRAGMENT_SHADER_PATH);
@@ -63,15 +59,9 @@ void Window::loop() {
     VBO vbo;
     vbo.init();
 
-    EBO ebo;
-    ebo.init();
-
-
-
     vao.bind();
 
     vbo.bind(vertices);
-    ebo.bind(indices);
     vbo.attrib();
 
     vbo.unbind();
@@ -87,7 +77,7 @@ void Window::loop() {
 
         shader.bind();
         vao.bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(m_window);
         glfwPollEvents();
