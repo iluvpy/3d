@@ -1,1 +1,1 @@
-g++ src/
+g++ src/*.cpp src/include/stb_image/stb_image.cpp -I./src/include -I./win32_libs/ -L./win32_libs/GLFW/lib/ -L./win32_libs/GLEW/lib/Win32/ -L/minGW/lib -lglew32 -lglfw3 -lglu32 -lopengl32 -lgdi32 -luser32 -lkernel32 -lmingw32

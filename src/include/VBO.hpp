@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GL/glew.h>
+#include "glewInclude.hpp"
 #include <vector>
 #include "Vertex.hpp"
 
