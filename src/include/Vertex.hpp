@@ -9,4 +9,7 @@ struct Vertex
     float r;
     float g;
     float b;
+
+    float textX;
+    float textY;
 };

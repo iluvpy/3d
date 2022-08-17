@@ -5,8 +5,8 @@
 
 class EBO {
 public:
-    void init();
-    void bind(std::vector<unsigned int> indices);
+    void init(std::vector<unsigned int> indices);
+    void bind();
     void unbind();
 private:
     GLuint m_indexBuffer;

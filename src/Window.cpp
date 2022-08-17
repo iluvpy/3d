@@ -5,6 +5,7 @@
 #include "EBO.hpp"
 #include "Shader.hpp"
 #include "RenderSettings.hpp"
+#include "Texture.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -44,29 +45,42 @@ Window::~Window() {
 void Window::loop() {
 
     std::vector<Vertex> vertices = {
-        Vertex{  0.0f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f},  // top right
-        Vertex{  0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f},  // bottom right
-        Vertex{ -0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 0.0f}
+        // positions          // colors           // texture coords
+        Vertex{ 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f},   // top right
+        Vertex{ 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f},   // bottom right
+        Vertex{-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f},   // bottom left
+        Vertex{-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f}    // top left 
     };
 
+    std::vector<unsigned int> indices = {
+        0, 1, 3, // first triangle
+        1, 2, 3  // second triangle
+    };
 
     Shader shader;
     shader.init(RenderSettings::VERTEX_SHADER_PATH, RenderSettings::FRAGMENT_SHADER_PATH);
 
+
+
     VAO vao;
     vao.init();
-
-    VBO vbo;
-    vbo.init();
-
     vao.bind();
 
-    vbo.bind(vertices);
+    VBO vbo;
+    vbo.init(vertices);
+
+    EBO ebo;
+    ebo.init(indices);
+
+    vbo.bind();
+    ebo.bind();
     vbo.attrib();
 
     vbo.unbind();
     vao.unbind();
 
+    Texture paperTexture;
+    paperTexture.init("./textures/paper.png");
 
 
     while (!glfwWindowShouldClose(m_window)) {
@@ -75,12 +89,14 @@ void Window::loop() {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        paperTexture.bind();
         shader.bind();
         vao.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(m_window);
         glfwPollEvents();
+
 
     }
 }

@@ -54,6 +54,11 @@ GLint Shader::getUniformLocation(const std::string& name) {
     return location;
 }
 
+
+void Shader::setTexture(const std::string& textureName, int index) {
+    glUniform1i(getUniformLocation(textureName), index);
+}
+
 std::string Shader::readShader(const std::string &path) {
     // Read from the text file
     std::ifstream shaderFile(path);

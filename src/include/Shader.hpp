@@ -12,6 +12,7 @@ public:
     void init(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
     void bind();
     void unbind();
+    void setTexture(const std::string& textureName, int index);
     GLint getUniformLocation(const std::string& name);
     ~Shader();
 
