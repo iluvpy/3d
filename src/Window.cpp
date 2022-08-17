@@ -7,6 +7,9 @@
 #include "RenderSettings.hpp"
 #include "Texture.hpp"
 
+
+#define PRINT_OPENGL_ERROR std::cout << "error: " << glGetError() << std::endl
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -79,24 +82,35 @@ void Window::loop() {
     vbo.unbind();
     vao.unbind();
 
-    Texture paperTexture;
-    paperTexture.init("./textures/paper.png");
+    Texture containerTexture;
+    containerTexture.createFrom("./textures/container.jpg");
+
+    Texture faceTexture;
+    faceTexture.setShouldFlip(true);
+    faceTexture.setDisplayFormat(GL_RGBA);
+    faceTexture.createFrom("./textures/awesomeface.png");
+
+    shader.bind();
+    shader.setTexture("texture1", 0);
+    shader.setTexture("texture2", 1);
 
 
     while (!glfwWindowShouldClose(m_window)) {
 
-
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        paperTexture.bind();
+        glActiveTexture(GL_TEXTURE0);
+        containerTexture.bind();
+        glActiveTexture(GL_TEXTURE1);
+        faceTexture.bind();
+
         shader.bind();
         vao.bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(m_window);
         glfwPollEvents();
-
 
     }
 }
