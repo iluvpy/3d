@@ -55,9 +55,14 @@ GLint Shader::getUniformLocation(const std::string& name) {
 }
 
 
-void Shader::setTexture(const std::string& textureName, int index) {
-    glUniform1i(getUniformLocation(textureName), index);
+void Shader::setInt(const std::string& name, int i) {
+    glUniform1i(getUniformLocation(name), i);
 }
+
+void Shader::setMatf4(const std::string& name, glm::mat4 mat) {
+    glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(mat));
+}
+
 
 std::string Shader::readShader(const std::string &path) {
     // Read from the text file

@@ -16,5 +16,6 @@ build obj/vao.o: cc src/VAO.cpp
 build obj/ebo.o: cc src/EBO.cpp
 build obj/stb.o: cc src/include/stb_image/stb_image.cpp
 build obj/texture.o: cc src/Texture.cpp
+build obj/util.o: cc src/Util.cpp
 
-build 3d: lnk obj/3d.o obj/window.o obj/shader.o obj/vbo.o obj/vao.o obj/ebo.o obj/stb.o obj/texture.o
+build 3d: lnk obj/3d.o obj/window.o obj/shader.o obj/vbo.o obj/vao.o obj/ebo.o obj/stb.o obj/texture.o obj/util.o

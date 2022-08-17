@@ -6,13 +6,17 @@
 #include <stdexcept>
 #include <iostream>
 #include <unordered_map>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class Shader {
 public:
     void init(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
     void bind();
     void unbind();
-    void setTexture(const std::string& textureName, int index);
+    void setInt(const std::string& name, int i);
+    void setMatf4(const std::string& name, glm::mat4 mat);
     GLint getUniformLocation(const std::string& name);
     ~Shader();
 

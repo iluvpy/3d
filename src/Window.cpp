@@ -6,7 +6,7 @@
 #include "Shader.hpp"
 #include "RenderSettings.hpp"
 #include "Texture.hpp"
-
+#include "Util.hpp"
 
 #define PRINT_OPENGL_ERROR std::cout << "error: " << glGetError() << std::endl
 
@@ -17,7 +17,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 
 void Window::init() {
-
+    m_deltaTime = 0.0;
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -91,14 +91,56 @@ void Window::loop() {
     faceTexture.createFrom("./textures/awesomeface.png");
 
     shader.bind();
-    shader.setTexture("texture1", 0);
-    shader.setTexture("texture2", 1);
+    shader.setInt("texture1", 0);
+    shader.setInt("texture2", 1);
 
+
+
+    double currentFrameTime = 0.0;
+    double lastFrameTime = 0.0;
+
+    float angle = 90.0f;
 
     while (!glfwWindowShouldClose(m_window)) {
+        // set delta time
+        currentFrameTime = Util::getTimeMS();
+        m_deltaTime = (currentFrameTime - lastFrameTime) / 1000.0f;
+        lastFrameTime = currentFrameTime;
 
+        Util::sleep(5);
+  
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+
+        // transfomations
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(0.5f, 0.0f, 0.0f));
+        trans = glm::rotate(trans, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+        angle += 10.0f*m_deltaTime;
+        if (angle >= 360.0f) angle = 0.0f;
+        shader.setMatf4("transform", trans);
+
+
+        glActiveTexture(GL_TEXTURE0);
+        containerTexture.bind();
+        glActiveTexture(GL_TEXTURE1);
+        faceTexture.bind();
+
+        shader.bind();
+        vao.bind();
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+
+
+        // transfomations
+        trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(-0.5f, 0.0f, 0.0f));
+        trans = glm::rotate(trans, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+        angle += 10.0f*m_deltaTime;
+        if (angle >= 360.0f) angle = 0.0f;
+        shader.setMatf4("transform", trans);
+
 
         glActiveTexture(GL_TEXTURE0);
         containerTexture.bind();

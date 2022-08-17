@@ -16,4 +16,5 @@ public:
     ~Window();
 private:
     GLFWwindow *m_window;
+    double m_deltaTime;
 };
