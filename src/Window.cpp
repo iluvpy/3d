@@ -9,6 +9,8 @@
 #include "Util.hpp"
 
 #define PRINT_OPENGL_ERROR std::cout << "error: " << glGetError() << std::endl
+#define FOV 45.0f
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -113,14 +115,17 @@ void Window::loop() {
         glClear(GL_COLOR_BUFFER_BIT);
 
 
-        // transfomations
-        glm::mat4 trans = glm::mat4(1.0f);
-        trans = glm::translate(trans, glm::vec3(0.5f, 0.0f, 0.0f));
-        trans = glm::rotate(trans, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
-        angle += 10.0f*m_deltaTime;
-        if (angle >= 360.0f) angle = 0.0f;
-        shader.setMatf4("transform", trans);
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
 
+        glm::mat4 view = glm::mat4(1.0f);
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); 
+        view = glm::rotate(view, glm::radians(angle), glm::vec3(0.5f, 0.0f, 1.0f));
+        angle += 10.0f*m_deltaTime;
+        if (angle >= 360) angle = 0;
+
+        glm::mat4 projection;
+        projection = glm::perspective(glm::radians(FOV), (float)(getWindowWidth() / getWindowHeight()), 0.1f, 100.0f);
 
         glActiveTexture(GL_TEXTURE0);
         containerTexture.bind();
@@ -128,28 +133,13 @@ void Window::loop() {
         faceTexture.bind();
 
         shader.bind();
+        shader.setMatf4("model", model);
+        shader.setMatf4("view", view);
+        shader.setMatf4("projection", projection);
+
         vao.bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-
-
-        // transfomations
-        trans = glm::mat4(1.0f);
-        trans = glm::translate(trans, glm::vec3(-0.5f, 0.0f, 0.0f));
-        trans = glm::rotate(trans, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
-        angle += 10.0f*m_deltaTime;
-        if (angle >= 360.0f) angle = 0.0f;
-        shader.setMatf4("transform", trans);
-
-
-        glActiveTexture(GL_TEXTURE0);
-        containerTexture.bind();
-        glActiveTexture(GL_TEXTURE1);
-        faceTexture.bind();
-
-        shader.bind();
-        vao.bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(m_window);
         glfwPollEvents();
@@ -157,5 +147,17 @@ void Window::loop() {
     }
 }
 
+
+int Window::getWindowWidth() {
+    int w, h;
+    glfwGetWindowSize(m_window, &w, &h);
+    return w;
+}
+
+int Window::getWindowHeight() {
+    int w, h;
+    glfwGetWindowSize(m_window, &w, &h);
+    return h;
+}
 
 

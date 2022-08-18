@@ -13,6 +13,8 @@ class Window {
 public:
     void init();
     void loop();
+    int getWindowWidth();
+    int getWindowHeight();
     ~Window();
 private:
     GLFWwindow *m_window;
