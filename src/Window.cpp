@@ -50,11 +50,47 @@ Window::~Window() {
 void Window::loop() {
 
     std::vector<Vertex> vertices = {
-        // positions          // colors           // texture coords
-        Vertex{ 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f},   // top right
-        Vertex{ 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f},   // bottom right
-        Vertex{-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f},   // bottom left
-        Vertex{-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f}    // top left 
+        Vertex{-0.5f, -0.5f, -0.5f,  0.0f, 0.0f},
+        Vertex{ 0.5f, -0.5f, -0.5f,  1.0f, 0.0f},
+        Vertex{ 0.5f,  0.5f, -0.5f,  1.0f, 1.0f},
+        Vertex{ 0.5f,  0.5f, -0.5f,  1.0f, 1.0f},
+        Vertex{-0.5f,  0.5f, -0.5f,  0.0f, 1.0f},
+        Vertex{-0.5f, -0.5f, -0.5f,  0.0f, 0.0f},
+
+        Vertex{-0.5f, -0.5f,  0.5f,  0.0f, 0.0f},
+        Vertex{ 0.5f, -0.5f,  0.5f,  1.0f, 0.0f},
+        Vertex{ 0.5f,  0.5f,  0.5f,  1.0f, 1.0f},
+        Vertex{ 0.5f,  0.5f,  0.5f,  1.0f, 1.0f},
+        Vertex{-0.5f,  0.5f,  0.5f,  0.0f, 1.0f},
+        Vertex{-0.5f, -0.5f,  0.5f,  0.0f, 0.0f},
+
+        Vertex{-0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
+        Vertex{-0.5f,  0.5f, -0.5f,  1.0f, 1.0f},
+        Vertex{-0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
+        Vertex{-0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
+        Vertex{-0.5f, -0.5f,  0.5f,  0.0f, 0.0f},
+        Vertex{-0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
+
+        Vertex{ 0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
+        Vertex{ 0.5f,  0.5f, -0.5f,  1.0f, 1.0f},
+        Vertex{ 0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
+        Vertex{ 0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
+        Vertex{ 0.5f, -0.5f,  0.5f,  0.0f, 0.0f},
+        Vertex{ 0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
+
+        Vertex{-0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
+        Vertex{ 0.5f, -0.5f, -0.5f,  1.0f, 1.0f},
+        Vertex{ 0.5f, -0.5f,  0.5f,  1.0f, 0.0f},
+        Vertex{ 0.5f, -0.5f,  0.5f,  1.0f, 0.0f},
+        Vertex{-0.5f, -0.5f,  0.5f,  0.0f, 0.0f},
+        Vertex{-0.5f, -0.5f, -0.5f,  0.0f, 1.0f},
+
+        Vertex{-0.5f,  0.5f, -0.5f,  0.0f, 1.0f},
+        Vertex{ 0.5f,  0.5f, -0.5f,  1.0f, 1.0f},
+        Vertex{ 0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
+        Vertex{ 0.5f,  0.5f,  0.5f,  1.0f, 0.0f},
+        Vertex{-0.5f,  0.5f,  0.5f,  0.0f, 0.0f},
+        Vertex{-0.5f,  0.5f, -0.5f,  0.0f, 1.0f} 
     };
 
     std::vector<unsigned int> indices = {
@@ -100,8 +136,9 @@ void Window::loop() {
 
     double currentFrameTime = 0.0;
     double lastFrameTime = 0.0;
+    float angle = 0.0f;
 
-    float angle = 90.0f;
+    glEnable(GL_DEPTH_TEST);
 
     while (!glfwWindowShouldClose(m_window)) {
         // set delta time
@@ -112,17 +149,16 @@ void Window::loop() {
         Util::sleep(5);
   
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
+        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 1.0f)); 
+        angle += m_deltaTime*20.0f;
+        if (angle > 360) angle = 0;
 
         glm::mat4 view = glm::mat4(1.0f);
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); 
-        view = glm::rotate(view, glm::radians(angle), glm::vec3(0.5f, 0.0f, 1.0f));
-        angle += 10.0f*m_deltaTime;
-        if (angle >= 360) angle = 0;
 
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(FOV), (float)(getWindowWidth() / getWindowHeight()), 0.1f, 100.0f);
@@ -138,7 +174,7 @@ void Window::loop() {
         shader.setMatf4("projection", projection);
 
         vao.bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
         glfwSwapBuffers(m_window);
