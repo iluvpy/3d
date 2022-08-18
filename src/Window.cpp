@@ -153,14 +153,15 @@ void Window::loop() {
 
 
         glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        glm::mat4 projection = glm::mat4(1.0f);
+
         model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 1.0f)); 
         angle += m_deltaTime*20.0f;
         if (angle > 360) angle = 0;
 
-        glm::mat4 view = glm::mat4(1.0f);
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); 
 
-        glm::mat4 projection;
         projection = glm::perspective(glm::radians(FOV), (float)(getWindowWidth() / getWindowHeight()), 0.1f, 100.0f);
 
         glActiveTexture(GL_TEXTURE0);
@@ -175,6 +176,24 @@ void Window::loop() {
 
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-1.0f, 0.5f, -1.0f));
+        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 1.0f, 0.0f)); 
+
+        glActiveTexture(GL_TEXTURE0);
+        containerTexture.bind();
+        glActiveTexture(GL_TEXTURE1);
+        faceTexture.bind();
+
+        shader.bind();
+        shader.setMatf4("model", model);
+        shader.setMatf4("view", view);
+        shader.setMatf4("projection", projection);
+
+        vao.bind();
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
 
 
         glfwSwapBuffers(m_window);
