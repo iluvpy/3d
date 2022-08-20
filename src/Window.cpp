@@ -37,8 +37,11 @@ void Window::init() {
         glfwTerminate();
         throw std::runtime_error("Failed to initialize graphics api\n"); 
     }
-
+    glfwSetWindowUserPointer(m_window, this);
     glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback); 
+
+    m_keyboard.init(m_window);
+    m_camera.init();
 }
 
 
@@ -101,8 +104,6 @@ void Window::loop() {
     Shader shader;
     shader.init(RenderSettings::VERTEX_SHADER_PATH, RenderSettings::FRAGMENT_SHADER_PATH);
 
-
-
     VAO vao;
     vao.init();
     vao.bind();
@@ -145,6 +146,7 @@ void Window::loop() {
         currentFrameTime = Util::getTimeMS();
         m_deltaTime = (currentFrameTime - lastFrameTime) / 1000.0f;
         lastFrameTime = currentFrameTime;
+        m_camera.update(&m_keyboard, m_deltaTime);
 
         Util::sleep(5);
   
@@ -156,11 +158,12 @@ void Window::loop() {
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 projection = glm::mat4(1.0f);
 
+        model = glm::translate(model, glm::vec3(0.0f, -0.1f, -2.0f));
         model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 1.0f)); 
         angle += m_deltaTime*20.0f;
         if (angle > 360) angle = 0;
 
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); 
+        view = m_camera.getView();
 
         projection = glm::perspective(glm::radians(FOV), (float)(getWindowWidth() / getWindowHeight()), 0.1f, 100.0f);
 
@@ -177,28 +180,10 @@ void Window::loop() {
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-1.0f, 0.5f, -1.0f));
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 1.0f, 0.0f)); 
-
-        glActiveTexture(GL_TEXTURE0);
-        containerTexture.bind();
-        glActiveTexture(GL_TEXTURE1);
-        faceTexture.bind();
-
-        shader.bind();
-        shader.setMatf4("model", model);
-        shader.setMatf4("view", view);
-        shader.setMatf4("projection", projection);
-
-        vao.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
         glfwSwapBuffers(m_window);
         glfwPollEvents();
 
+        m_keyboard.update();
     }
 }
 
@@ -213,6 +198,11 @@ int Window::getWindowHeight() {
     int w, h;
     glfwGetWindowSize(m_window, &w, &h);
     return h;
+}
+
+
+Keyboard *Window::getKeyboard() {
+    return &m_keyboard;
 }
 
 
