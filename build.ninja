@@ -1,5 +1,5 @@
-cflags = -std=c++17 -I./src/include/ -g
-lflags = -lGL -lglfw -lGLEW
+cflags = -std=c++17 -I./src/include/ 
+lflags = -lGL -lglfw -lGLEW 
 cxx = clang++
 
 rule cc
@@ -19,5 +19,6 @@ build obj/texture.o: cc src/Texture.cpp
 build obj/util.o: cc src/Util.cpp
 build obj/keyboard.o: cc src/Keyboard.cpp
 build obj/camera.o: cc src/Camera.cpp
+build obj/mouse.o: cc src/Mouse.cpp
 
-build 3d: lnk obj/3d.o obj/window.o obj/shader.o obj/vbo.o obj/vao.o obj/ebo.o obj/stb.o obj/texture.o obj/util.o obj/keyboard.o obj/camera.o
+build 3d: lnk obj/3d.o obj/window.o obj/shader.o obj/vbo.o obj/vao.o obj/ebo.o obj/stb.o obj/texture.o obj/util.o obj/keyboard.o obj/camera.o obj/mouse.o

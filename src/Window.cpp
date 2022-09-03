@@ -39,8 +39,10 @@ void Window::init() {
     }
     glfwSetWindowUserPointer(m_window, this);
     glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback); 
+    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
 
     m_keyboard.init(m_window);
+    m_mouse.init(this);
     m_camera.init();
 }
 
@@ -146,7 +148,7 @@ void Window::loop() {
         currentFrameTime = Util::getTimeMS();
         m_deltaTime = (currentFrameTime - lastFrameTime) / 1000.0f;
         lastFrameTime = currentFrameTime;
-        m_camera.update(&m_keyboard, m_deltaTime);
+        m_camera.update(&m_keyboard, &m_mouse, m_deltaTime);
 
         Util::sleep(5);
   
@@ -184,6 +186,7 @@ void Window::loop() {
         glfwPollEvents();
 
         m_keyboard.update();
+        m_mouse.update();
     }
 }
 
@@ -203,6 +206,15 @@ int Window::getWindowHeight() {
 
 Keyboard *Window::getKeyboard() {
     return &m_keyboard;
+}
+
+
+Mouse *Window::getMouse() {
+    return &m_mouse;
+}
+
+GLFWwindow *Window::getGLFWwindow() {
+    return m_window;
 }
 
 
